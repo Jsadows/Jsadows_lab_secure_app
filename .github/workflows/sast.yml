@@ -1,4 +1,9 @@
 name: Perform Mixeway Scan
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
 
 jobs:
   mixeway-scan:
