@@ -27,8 +27,8 @@ jobs:
           MIXEWAY_KEY: "faa45946-b99c-4f74-a877-93058a480c48"
           MIXEWAY_PROJECT_ID: 165
           MIXEWAY_PROJECT_NAME: "Jsadows_lab_secure_app"
-          COMMIT_ID: "test"
-          BRANCH: "master"
+          COMMIT_ID: ${{ steps.vars.outputs.sha_short }}
+          BRANCH: ${{ steps.vars.outputs.branch }}
         run: |
           docker run \
             -e OSS_USERNAME="j.sadowski09@gmail.com" \
@@ -38,7 +38,7 @@ jobs:
             -e MIXEWAY_PROJECT_ID=165 \
             -e MODE=STANDALONE \
             -e MIXEWAY_PROJECT_NAME="Jsadows_lab_secure_app" \
-            -e COMMIT_ID="test" \
-            -e BRANCH="master" \
+            -e COMMIT_ID=${{ steps.vars.outputs.sha_short }} \
+            -e BRANCH=${{ steps.vars.outputs.branch }} \
             -v ${{ github.workspace }}:/opt/sources \
             mixeway/scanner:latest
