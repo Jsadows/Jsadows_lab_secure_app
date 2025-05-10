@@ -1,0 +1,44 @@
+name: Perform Mixeway Scan
+
+jobs:
+  mixeway-scan:
+    name: Mixeway Scanning
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v1
+
+      - name: Prepare variables
+        id: vars
+        shell: bash
+        run: |
+          echo "##[set-output name=branch;]$(echo ${GITHUB_REF#refs/heads/})"
+          echo "::set-output name=sha_short::$(git rev-parse HEAD)"
+
+      - name: Prepare Mixeway docker image
+        run: |
+          docker pull mixeway/scanner:latest
+
+      - name: Run Scan
+        env:
+          OSS_USERNAME: "j.sadowski09@gmail.com"
+          OSS_KEY: "c8bd64b99cd9338518c979882eabd794e2d7163f"
+          MIXEWAY_URL: https://hub.mixeway.io
+          MIXEWAY_KEY: "faa45946-b99c-4f74-a877-93058a480c48"
+          MIXEWAY_PROJECT_ID: 165
+          MIXEWAY_PROJECT_NAME: "Jsadows_lab_secure_app"
+          COMMIT_ID: "test"
+          BRANCH: "master"
+        run: |
+          docker run \
+            -e OSS_USERNAME="j.sadowski09@gmail.com" \
+            -e OSS_KEY="c8bd64b99cd9338518c979882eabd794e2d7163f" \
+            -e MIXEWAY_URL="https://hub.mixeway.io" \
+            -e MIXEWAY_KEY="faa45946-b99c-4f74-a877-93058a480c48" \
+            -e MIXEWAY_PROJECT_ID=165 \
+            -e MODE=STANDALONE \
+            -e MIXEWAY_PROJECT_NAME="Jsadows_lab_secure_app" \
+            -e COMMIT_ID="test" \
+            -e BRANCH="master" \
+            -v ${{ github.workspace }}:/opt/sources \
+            mixeway/scanner:latest
